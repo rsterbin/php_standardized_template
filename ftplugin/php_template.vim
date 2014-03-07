@@ -7,10 +7,10 @@
 
 " {{{ config
 
-if exists("b:did_phpclass_plugin")
+if exists("b:did_php_standardized_template_plugin")
   finish
 endif
-let b:did_phpclass_plugin = 1
+let b:did_php_standardized_template_plugin = 1
 
 " Mappings
 nnoremap <leader>fi  :call InsertFile()<CR>
