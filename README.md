@@ -49,3 +49,11 @@ Set the buffer-scope variable `php_template_config` to set coding standards.
 
 Valid values are `y` and `n`.
 
+Notes
+-----
+
+This plugin is based on a script called `php_template.vim` that once appeared
+in the VIM Scripts listing and follows a similar structure.  I can no longer
+find a copy of it, but if you happen to know who the author was, please let me
+know.  I would love to be able to credit them.
+
