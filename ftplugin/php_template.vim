@@ -44,6 +44,7 @@ let s:default_coding_standards = {
     \   'methodsinceline'    : 'n',
     \   'propertysinceline'  : 'n',
     \   'constantsinceline'  : 'n',
+    \   'namespace'          : 'n',
     \   'zendloadclass'      : 'n',
     \   'requireclass'       : 'n',
     \   'classbracebelow'    : 'y',
@@ -976,6 +977,8 @@ function! s:setStandards()
     let s:coding_standard_tabs               = standards['tabs']
     let s:coding_standard_methodauthorline   = standards['methodauthorline']
     let s:coding_standard_methodsinceline    = standards['methodsinceline']
+    let s:coding_standard_constantsinceline  = standards['constantsinceline']
+    let s:coding_standard_namespace          = standards['namespace']
     let s:coding_standard_zendloadclass      = standards['zendloadclass']
     let s:coding_standard_requireclass       = standards['requireclass']
     let s:coding_standard_classbracebelow    = standards['classbracebelow']
@@ -1091,6 +1094,26 @@ function! s:getSubpackage(ask)
         endif
     endif
     return subpackage
+endfunction
+
+"   }}}
+"   {{{ getNamespace()
+
+function! s:getNamespace(ask)
+    try
+        exe "silent mbgg/namespace \<CR>wv$hy`b"
+        let namespace = @"
+    catch
+        if exists('b:php_template_config') && has_key(b:php_template_config, 'namespace')
+            let namespace = b:php_template_config['namespace']
+        else
+            let namespace = ''
+        endif
+    endtry
+    if a:ask == 'y' && namespace == ''
+        let namespace = input("Namespace? ")
+    endif
+    return namespace
 endfunction
 
 "   }}}
@@ -1277,8 +1300,12 @@ function! s:get_template_class()
     if s:coding_standard_docblocks == 'n'
         let template =
             \ "<?php\n" .
-            \ "\n" .
-            \ "class %classname%"
+            \ "\n"
+        if s:coding_standard_namespace == 'y'
+            let template = template . "namespace %namespace%;\n" .
+                \ "\n"
+        endif
+        let template = template . "class %classname%"
         if s:coding_standard_classbracebelow == 'y'
             let template = template . "\n{\n"
         else
@@ -1304,8 +1331,12 @@ function! s:get_template_class()
             \ " *\n" .
             \ s:buildDocBlockTemplate(s:coding_standard_filedocblockorder) .
             \ " */\n" .
-            \ "\n" .
-            \ "/**\n" .
+            \ "\n"
+        if s:coding_standard_namespace == 'y'
+            let template = template . "namespace %namespace%;\n" .
+                \ "\n"
+        endif
+        let template = template . "/**\n" .
             \ " * %description%\n" .
             \ " *\n" .
             \ s:buildDocBlockTemplate(s:coding_standard_classdocblockorder) .
@@ -1353,6 +1384,10 @@ function! s:get_template_extclass()
         let template =
             \ "<?php\n" .
             \ "\n" .
+        if s:coding_standard_namespace == 'y'
+            let template = template . "namespace %namespace%;\n" .
+                \ "\n"
+        endif
         if s:coding_standard_requireclass == 'y'
             let template = template .
                 \ "require_once '%parentfile%';\n" .
@@ -1397,6 +1432,10 @@ function! s:get_template_extclass()
             \ s:buildDocBlockTemplate(s:coding_standard_filedocblockorder) .
             \ " */\n" .
             \ "\n"
+        if s:coding_standard_namespace == 'y'
+            let template = template . "namespace %namespace%;\n" .
+                \ "\n"
+        endif
         if s:coding_standard_requireclass == 'y'
             let template = template .
                 \ "\/** @see %parentclass% **/\n" .
