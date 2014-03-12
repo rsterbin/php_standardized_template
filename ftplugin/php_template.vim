@@ -960,17 +960,34 @@ endfunction
 "   }}}
 " }}}
 " {{{ Helper Methods
+"   {{{ getConfigOption()
+
+function! s:getConfigOption(optkey)
+    let optval = ''
+    if exists('b:php_template_config') && has_key(b:php_template_config, a:optkey)
+        let optval = b:php_template_config[a:optkey]
+    elseif exists('g:php_template_config') && has_key(g:php_template_config, a:optkey)
+        let optval = g:php_template_config[a:optkey]
+    endif
+    return optval
+endfunction
+
+"   }}}
 "   {{{ setStandards()
 
 function! s:setStandards()
     let standards = s:default_coding_standards
+    let cfg = {}
     if exists('b:php_template_config') && has_key(b:php_template_config, 'coding_standards')
-        for std in keys(s:default_coding_standards)
-            if has_key(b:php_template_config['coding_standards'], std)
-                let standards[std] = b:php_template_config['coding_standards'][std]
-            endif
-        endfor
+        let optval = b:php_template_config['coding_standards']
+    elseif exists('g:php_template_config') && has_key(g:php_template_config, 'coding_standards')
+        let optval = g:php_template_config['coding_standards']
     endif
+    for std in keys(s:default_coding_standards)
+        if has_key(cfg, std)
+            let standards[std] = cfg[std]
+        endif
+    endfor
 
     let s:coding_standard_underscore_prefix  = standards['underscore_prefix']
     let s:coding_standard_docblocks          = standards['docblocks']
@@ -1042,11 +1059,7 @@ function! s:getCategory(ask)
         exe "silent mbgg/@category\<CR>wwv$hy`b"
         let category = @"
     catch
-        if exists('b:php_template_config') && has_key(b:php_template_config, 'category')
-            let category = b:php_template_config['category']
-        else
-            let category = ''
-        endif
+        let category = s:getConfigOption('category')
     endtry
     if a:ask == 'y' && category == ''
         let category = input("Category name? ")
@@ -1062,11 +1075,7 @@ function! s:getPackage(ask)
         exe "normal mbgg/@package\<CR>wwv$hy`b"
         let package = @"
     catch
-        if exists('b:php_template_config') && has_key(b:php_template_config, 'package')
-            let package = b:php_template_config['package']
-        else
-            let package = ''
-        endif
+        let package = s:getConfigOption('package')
     endtry
     if a:ask == 'y' && package == ''
         let package = input("Package name? ")
@@ -1082,11 +1091,7 @@ function! s:getSubpackage(ask)
         exe "normal mbgg/@subpackage\<CR>wwv$hy`b"
         let subpackage = @"
     catch
-        if exists('b:php_template_config') && has_key(b:php_template_config, 'subpackage')
-            let subpackage = b:php_template_config['subpackage']
-        else
-            let subpackage = ''
-        endif
+        let subpackage = s:getConfigOption('subpackage')
     endtry
     if a:ask == 'y'
         if subpackage == ''
@@ -1104,11 +1109,7 @@ function! s:getNamespace(ask)
         exe "silent mbgg/namespace \<CR>wv$hy`b"
         let namespace = @"
     catch
-        if exists('b:php_template_config') && has_key(b:php_template_config, 'namespace')
-            let namespace = b:php_template_config['namespace']
-        else
-            let namespace = ''
-        endif
+        let namespace = s:getConfigOption('namespace')
     endtry
     if a:ask == 'y' && namespace == ''
         let namespace = input("Namespace? ")
@@ -1146,22 +1147,14 @@ endfunction
 "   {{{ getCopyright()
 
 function! s:getCopyright()
-    if exists('b:php_template_config') && has_key(b:php_template_config, 'copyright')
-        return b:php_template_config['copyright']
-    else
-        return ''
-    endif
+    let copyright = s:getConfigOption('copyright')
 endfunction
 
 "   }}}
 "   {{{ getVersion()
 
 function! s:getVersion()
-    if exists('b:php_template_config') && has_key(b:php_template_config, 'versionnum')
-        let versionnum = b:php_template_config['version']
-    else
-        let versionnum = ''
-    endif
+    let versionnum = s:getConfigOption('versionnum')
     if versionnum == 'DATE'
         let versionnum = strftime('%Y-%m-%d')
     endif
@@ -1172,33 +1165,21 @@ endfunction
 "   {{{ getAuthor()
 
 function! s:getAuthor()
-    if exists('b:php_template_config') && has_key(b:php_template_config, 'author')
-        return b:php_template_config['author']
-    else
-        return ''
-    endif
+    return s:getConfigOption('author')
 endfunction
 
 "   }}}
 "   {{{ getLicense()
 
 function! s:getLicense()
-    if exists('b:php_template_config') && has_key(b:php_template_config, 'license')
-        return b:php_template_config['license']
-    else
-        return ''
-    endif
+    return s:getConfigOption('license')
 endfunction
 
 "   }}}
 "   {{{ getLink()
 
 function! s:getLink()
-    if exists('b:php_template_config') && has_key(b:php_template_config, 'link')
-        return b:php_template_config['link']
-    else
-        return ''
-    endif
+    return s:getConfigOption('link')
 endfunction
 
 "   }}}

@@ -24,30 +24,48 @@ Provided Templates
 | `<leader>tf`  | `InsertTestFile()`            | Test file (PHPUnit)                                            |
 | `<leader>tm`  | `InsertTestMethod()`          | Test method (PHPUnit)                                          |
 
+Options
+-------
+
+Set the variable `php_template_config` to set options. `php_template_config`
+should be a directory with following keys:
+
+| Option Name        | Type       | Description                                                                     |
+|:------------------ |:---------- |:------------------------------------------------------------------------------- |
+| `category`         | string     | Default text to use for @category tag, if there isn't one in the file already   |
+| `package`          | string     | Default text to use for @package tag, if there isn't one in the file already    |
+| `subpackage`       | string     | Default text to use for @subpackage tag, if there isn't one in the file already |
+| `namespace`        | string     | Namespace to use when creating new class files                                  |
+| `copyright`        | string     | Text to use for @copyright tag                                                  |
+| `versionnum`       | string     | The current global version, used for the @since tag                             |
+| `author`           | string     | Text to use for @author tag                                                     |
+| `license`          | string     | Text to use for @license tag                                                    |
+| `link`             | string     | Text to use for @link tag                                                       |
+| `coding_standards` | dictionary | Coding standards (see below)                                                    |
+
+You can set this variable at the global level (in your vimrc), or at the buffer
+level, if you want different settings in one buffer.
 
 Coding Standard Options
 -----------------------
 
-Set the buffer-scope variable `php_template_config` to set coding standards.
-`php_template_config` should be a directory with following keys:
+The element `coding_standards` should be a dictionary with the following keys:
 
-| Option Name          | Description                                                                                                                         |
-|:-------------------- |:----------------------------------------------------------------------------------------------------------------------------------- |
-| `underscore_prefix`  | Whether to make sure that private/protected varibales start with an underscore                                                      |
-| `docblocks`          | Whether to include docblocks at all                                                                                                 |
-| `tabs`               | Whether to use tabs rather than spaces                                                                                              |
-| `methodauthorline`   | Whether to add an @author tag on methods                                                                                            |
-| `methodsinceline`    | Whether to add a @since tag on methods                                                                                              |
-| `zendloadclass`      | Whether to use `Zend_Loader` to load the parent of an extended class                                                                |
-| `requireclass`       | Whether to use `require_once` to load the parent of an extended class                                                               |
-| `classbracebelow`    | Whether to put the brace below the declaration on classes                                                                           |
-| `methodbracebelow`   | Whether to put the brace below the declaration on methods                                                                           |
-| `filedocblockorder`  | An array of the order of doc tags for files                                                                                         |
-| `classdocblockorder` | An array of the order of doc tags for classes                                                                                       |
-| `parenspacing`       | Whether to insert spaces within parens: n is for method($param) and control($test); y is for method( $param ) and control ( $test ) |
-| `doxygenworkaround`  | Doxygen has a bug that makes @param type $varname description fail; use @param $varname description instead                         |
-
-Valid values are `y` and `n`.
+| Option Name          | Type    | Description                                                                                                                         |
+|:-------------------- |:------- |:----------------------------------------------------------------------------------------------------------- |
+| `underscore_prefix`  | 'y'/'n' | Whether to make sure that private/protected varibales start with an underscore                              |
+| `docblocks`          | 'y'/'n' | Whether to include docblocks at all                                                                         |
+| `tabs`               | 'y'/'n' | Whether to use tabs rather than spaces                                                                      |
+| `methodauthorline`   | 'y'/'n' | Whether to add an @author tag on methods                                                                    |
+| `methodsinceline`    | 'y'/'n' | Whether to add a @since tag on methods                                                                      |
+| `zendloadclass`      | 'y'/'n' | Whether to use `Zend_Loader` to load the parent of an extended class                                        |
+| `requireclass`       | 'y'/'n' | Whether to use `require_once` to load the parent of an extended class                                       |
+| `classbracebelow`    | 'y'/'n' | Whether to put the brace below the declaration on classes                                                   |
+| `methodbracebelow`   | 'y'/'n' | Whether to put the brace below the declaration on methods                                                   |
+| `filedocblockorder`  | 'y'/'n' | An array of the order of doc tags for files                                                                 |
+| `classdocblockorder` | 'y'/'n' | An array of the order of doc tags for classes                                                               |
+| `parenspacing`       | 'y'/'n' | Whether to insert spaces within parens                                                                      |
+| `doxygenworkaround`  | 'y'/'n' | Doxygen has a bug that makes @param type $varname description fail; use @param $varname description instead |
 
 Notes
 -----
