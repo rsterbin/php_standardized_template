@@ -221,6 +221,11 @@ function! InsertClass() range
         let subpackage = ''
     endif
 
+    if s:coding_standard_namespace == 'y'
+        let namespace = s:getNamespace('y')
+        let text = substitute(text, '%namespace%', namespace, 'g')
+    endif
+
     let text = substitute(text, '%copyright%', s:getCopyright(), 'g')
     let text = substitute(text, '%license%', s:getLicense(), 'g')
     let text = substitute(text, '%since%', s:getVersion(), 'g')
@@ -260,6 +265,11 @@ function! InsertExtendedClass() range
         let text = substitute(text, '%subpackageline%', s:getDocLine('subpackage', subpackage, ' '), 'g')
     else
         let subpackage = ''
+    endif
+
+    if s:coding_standard_namespace == 'y'
+        let namespace = s:getNamespace('y')
+        let text = substitute(text, '%namespace%', namespace, 'g')
     endif
 
     let text = substitute(text, '%copyright%', s:getCopyright(), 'g')
@@ -977,15 +987,16 @@ endfunction
 
 function! s:setStandards()
     let standards = s:default_coding_standards
-    let cfg = {}
     if exists('b:php_template_config') && has_key(b:php_template_config, 'coding_standards')
         let optval = b:php_template_config['coding_standards']
     elseif exists('g:php_template_config') && has_key(g:php_template_config, 'coding_standards')
         let optval = g:php_template_config['coding_standards']
+    else
+        let optval = {}
     endif
     for std in keys(s:default_coding_standards)
-        if has_key(cfg, std)
-            let standards[std] = cfg[std]
+        if has_key(optval, std)
+            let standards[std] = optval[std]
         endif
     endfor
 
@@ -1004,6 +1015,7 @@ function! s:setStandards()
     let s:coding_standard_classdocblockorder = standards['classdocblockorder']
     let s:coding_standard_parenspacing       = standards['parenspacing']
     let s:coding_standard_doxygenworkaround  = standards['doxygenworkaround']
+
 endfunction
 
 "   }}}
